@@ -58,7 +58,7 @@ services:
             - '8547:8547'
             - '8548:8548'
     fns:
-        image: ieigen/fns:v3
+        image: ieigen/fns:v4
         working_dir: '/app/release/services'
         command:
             - bash
@@ -120,8 +120,7 @@ def deploy(sudo_flag, build_flag, up_flag, rollup, password):
     # Stop running Arbitrum containers
     halt_docker(sudo_flag)
 
-    states_path = os.path.abspath(
-        os.path.join("rollups", rollup, "validator%s"))
+    states_path = os.path.abspath(os.path.join("rollups", rollup, "validator%s"))
 
     n_validators = 1
     while True:
@@ -229,11 +228,9 @@ def main():
 
     parser = argparse.ArgumentParser(prog=NAME, description=DESCRIPTION)
     # Required
-    parser.add_argument("rollup", type=str,
-                        help="The address of the rollup chain.")
+    parser.add_argument("rollup", type=str, help="The address of the rollup chain.")
 
-    parser.add_argument("-p", "--password",
-                        help="Password protecting validator keys.")
+    parser.add_argument("-p", "--password", help="Password protecting validator keys.")
     # Optional
 
     parser.add_argument(
