@@ -1055,7 +1055,7 @@ void ecall(MachineState& m) {
     std::ostringstream oss;
 
     int arity = get_arity(operator_string);
-    oss << operator_string << "," << arity << ",";
+    oss << operator_string << ",";
 
     switch (arity) {
         case 1:
