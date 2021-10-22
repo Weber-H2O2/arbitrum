@@ -58,7 +58,7 @@ services:
             - '8547:8547'
             - '8548:8548'
     fns:
-        image: ieigen/fns:v4
+        image: ieigen/fns:v1
         working_dir: '/app/release/services'
         command:
             - bash
