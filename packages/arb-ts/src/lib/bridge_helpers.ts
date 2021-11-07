@@ -341,7 +341,7 @@ export class BridgeHelper {
     batchNumber: BigNumber,
     indexInBatch: BigNumber,
     l2Provider: providers.Provider,
-    retryDelay = 500
+    retryDelay = 5000
   ): Promise<{
     proof: Array<string>
     path: BigNumber

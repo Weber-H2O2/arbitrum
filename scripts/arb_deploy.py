@@ -58,8 +58,10 @@ services:
             - '8547:8547'
             - '8548:8548'
     fns:
-        image: ieigen/fns:v1
+        image: ieigen/dev:v4
         working_dir: '/app/release/services'
+        environment:
+            - RUST_LOG=debug
         command:
             - bash
             - -c

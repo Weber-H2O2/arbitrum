@@ -9,7 +9,9 @@
     "typechain": "hardhat typechain",
     "deploy:tokenbridge:l1": "hardhat run scripts/deploy_token_bridge_l1.ts --network local_development",
     "deploy:tokenbridge:l2": "hardhat run scripts/deploy_token_bridge_l2.ts --network arbitrum",
-    "deploy:tokenbridge": "yarn deploy:tokenbridge:l2 && yarn deploy:tokenbridge:l1",
+    "deploy:tokenbridge:l1:721": "hardhat run scripts/deploy_token_bridge_l1_721.ts --network local_development",
+    "deploy:tokenbridge:l2:721": "hardhat run scripts/deploy_token_bridge_l2_721.ts --network arbitrum",
+    "deploy:tokenbridge": "yarn deploy:tokenbridge:l2 && yarn deploy:tokenbridge:l1 && yarn deploy:tokenbridge:l1:721 && yarn deploy:tokenbridge:l2:721",
     "deploy:buddydeployer": "hardhat run scripts/deploy_buddy_deployer.ts --network arbitrum",
     "deploy": "yarn deploy:buddydeployer && yarn deploy:tokenbridge"
   },
