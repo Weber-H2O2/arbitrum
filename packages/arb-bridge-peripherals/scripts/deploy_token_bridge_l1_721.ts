@@ -18,7 +18,7 @@ const main = async () => {
 
   const EthERC721Bridge = await ethers.getContractFactory('EthERC721Bridge')
 
-  if (deployments.buddyDeployer === '' || deployments.standardArbERC20 === '')
+  if (deployments.buddyDeployer === '' || deployments.standardArbERC721 === '')
     throw new Error("Deployments.json doesn't include the necessary addresses")
 
   const maxSubmissionCost = 0
@@ -93,7 +93,7 @@ const main = async () => {
 
   const initL2Bridge = await arbTokenBridgeConnectedAsProxy.initialize(
     ethERC721BridgeProxy.address,
-    deployments.standardArbERC20
+    deployments.standardArbERC721
   )
 
   const ethERC721BridgeConnectedAsProxy = EthERC721Bridge__factory.connect(
@@ -103,7 +103,7 @@ const main = async () => {
 
   const initL1Bridge = await ethERC721BridgeConnectedAsProxy.initialize(
     inboxAddress,
-    deployments.standardArbERC20,
+    deployments.standardArbERC721,
     arbTokenBridgeProxy.address
   )
   console.log('init L1 hash', initL1Bridge.hash)

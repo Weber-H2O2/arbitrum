@@ -192,7 +192,7 @@ contract EthERC721Bridge is IEthERC20Bridge, TokenAddressHandler {
         redirectedExits[withdrawData] = USED_ADDRESS;
         address dest = exitAddress != address(0) ? exitAddress : initialDestination;
         // Unsafe external calls must occur below checks and effects
-        IERC721(erc20).safeTransferFrom(msg.sender, dest, amount);
+        IERC721(erc20).transferFrom(msg.sender, dest, amount);
 
         emit WithdrawExecuted(initialDestination, dest, erc20, amount, exitNum);
     }
@@ -276,7 +276,7 @@ contract EthERC721Bridge is IEthERC20Bridge, TokenAddressHandler {
         uint256 gasPriceBid,
         bytes calldata callHookData
     ) external payable override returns (uint256 seqNum, uint256 depositCalldataLength) {
-        IERC721(erc20).safeTransferFrom(msg.sender, address(this), amount);
+        IERC721(erc20).transferFrom(msg.sender, address(this), amount);
 
         bytes memory depositCalldata;
         {
