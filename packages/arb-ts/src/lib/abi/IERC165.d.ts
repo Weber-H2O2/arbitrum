@@ -52,34 +52,34 @@ export class IERC165 extends Contract {
 
   functions: {
     supportsInterface(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>
 
     'supportsInterface(bytes4)'(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>
   }
 
   supportsInterface(
-    interfaceID: BytesLike,
+    interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>
 
   'supportsInterface(bytes4)'(
-    interfaceID: BytesLike,
+    interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>
 
   callStatic: {
     supportsInterface(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>
 
     'supportsInterface(bytes4)'(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>
   }
@@ -88,24 +88,24 @@ export class IERC165 extends Contract {
 
   estimateGas: {
     supportsInterface(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     'supportsInterface(bytes4)'(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>
   }
 
   populateTransaction: {
     supportsInterface(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'supportsInterface(bytes4)'(
-      interfaceID: BytesLike,
+      interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
   }

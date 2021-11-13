@@ -70,5 +70,5 @@ export default {
     defaultWait: 10000,
     executeOutGoingMessages: false,
     outBoxUpdateTimeout: 10000,
-  }
+  },
 }

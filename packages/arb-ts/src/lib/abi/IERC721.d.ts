@@ -14,7 +14,6 @@ import {
   Contract,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   CallOverrides,
 } from '@ethersproject/contracts'
 import { BytesLike } from '@ethersproject/bytes'
@@ -30,6 +29,7 @@ interface IERC721Interface extends ethers.utils.Interface {
     'ownerOf(uint256)': FunctionFragment
     'safeTransferFrom(address,address,uint256)': FunctionFragment
     'setApprovalForAll(address,bool)': FunctionFragment
+    'supportsInterface(bytes4)': FunctionFragment
     'transferFrom(address,address,uint256)': FunctionFragment
   }
 
@@ -59,6 +59,10 @@ interface IERC721Interface extends ethers.utils.Interface {
     values: [string, boolean]
   ): string
   encodeFunctionData(
+    functionFragment: 'supportsInterface',
+    values: [BytesLike]
+  ): string
+  encodeFunctionData(
     functionFragment: 'transferFrom',
     values: [string, string, BigNumberish]
   ): string
@@ -77,6 +81,10 @@ interface IERC721Interface extends ethers.utils.Interface {
   ): Result
   decodeFunctionResult(
     functionFragment: 'setApprovalForAll',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'supportsInterface',
     data: BytesLike
   ): Result
   decodeFunctionResult(
@@ -110,486 +118,536 @@ export class IERC721 extends Contract {
 
   functions: {
     approve(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>
 
     'approve(address,uint256)'(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>
 
-    balanceOf(_owner: string, overrides?: CallOverrides): Promise<[BigNumber]>
+    balanceOf(
+      owner: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { balance: BigNumber }>
 
     'balanceOf(address)'(
-      _owner: string,
+      owner: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber] & { balance: BigNumber }>
 
     getApproved(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string] & { operator: string }>
 
     'getApproved(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string] & { operator: string }>
 
     isApprovedForAll(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>
 
     'isApprovedForAll(address,address)'(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>
 
     ownerOf(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string] & { owner: string }>
 
     'ownerOf(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string] & { owner: string }>
 
     'safeTransferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>
 
     'safeTransferFrom(address,address,uint256,bytes)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<ContractTransaction>
 
     setApprovalForAll(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>
 
     'setApprovalForAll(address,bool)'(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<ContractTransaction>
 
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>
+
+    'supportsInterface(bytes4)'(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>
+
     transferFrom(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>
 
     'transferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<ContractTransaction>
   }
 
   approve(
-    _approved: string,
-    _tokenId: BigNumberish,
-    overrides?: PayableOverrides
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
   'approve(address,uint256)'(
-    _approved: string,
-    _tokenId: BigNumberish,
-    overrides?: PayableOverrides
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
-  balanceOf(_owner: string, overrides?: CallOverrides): Promise<BigNumber>
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
 
   'balanceOf(address)'(
-    _owner: string,
+    owner: string,
     overrides?: CallOverrides
   ): Promise<BigNumber>
 
-  getApproved(
-    _tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>
+  getApproved(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
 
   'getApproved(uint256)'(
-    _tokenId: BigNumberish,
+    tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>
 
   isApprovedForAll(
-    _owner: string,
-    _operator: string,
+    owner: string,
+    operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>
 
   'isApprovedForAll(address,address)'(
-    _owner: string,
-    _operator: string,
+    owner: string,
+    operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>
 
-  ownerOf(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
 
   'ownerOf(uint256)'(
-    _tokenId: BigNumberish,
+    tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>
 
   'safeTransferFrom(address,address,uint256)'(
-    _from: string,
-    _to: string,
-    _tokenId: BigNumberish,
-    overrides?: PayableOverrides
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
   'safeTransferFrom(address,address,uint256,bytes)'(
-    _from: string,
-    _to: string,
-    _tokenId: BigNumberish,
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
     data: BytesLike,
-    overrides?: PayableOverrides
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
   setApprovalForAll(
-    _operator: string,
+    operator: string,
     _approved: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>
 
   'setApprovalForAll(address,bool)'(
-    _operator: string,
+    operator: string,
     _approved: boolean,
     overrides?: Overrides
   ): Promise<ContractTransaction>
 
+  supportsInterface(
+    interfaceId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>
+
+  'supportsInterface(bytes4)'(
+    interfaceId: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<boolean>
+
   transferFrom(
-    _from: string,
-    _to: string,
-    _tokenId: BigNumberish,
-    overrides?: PayableOverrides
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
   'transferFrom(address,address,uint256)'(
-    _from: string,
-    _to: string,
-    _tokenId: BigNumberish,
-    overrides?: PayableOverrides
+    from: string,
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides
   ): Promise<ContractTransaction>
 
   callStatic: {
     approve(
-      _approved: string,
-      _tokenId: BigNumberish,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>
 
     'approve(address,uint256)'(
-      _approved: string,
-      _tokenId: BigNumberish,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>
 
-    balanceOf(_owner: string, overrides?: CallOverrides): Promise<BigNumber>
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
 
     'balanceOf(address)'(
-      _owner: string,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     getApproved(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>
 
     'getApproved(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>
 
     isApprovedForAll(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>
 
     'isApprovedForAll(address,address)'(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>
 
-    ownerOf(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
 
     'ownerOf(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>
 
     'safeTransferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>
 
     'safeTransferFrom(address,address,uint256,bytes)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>
 
     setApprovalForAll(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>
 
     'setApprovalForAll(address,bool)'(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: CallOverrides
     ): Promise<void>
 
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>
+
+    'supportsInterface(bytes4)'(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<boolean>
+
     transferFrom(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>
 
     'transferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>
   }
 
   filters: {
     Approval(
-      _owner: string | null,
-      _approved: string | null,
-      _tokenId: BigNumberish | null
+      owner: string | null,
+      approved: string | null,
+      tokenId: BigNumberish | null
     ): EventFilter
 
     ApprovalForAll(
-      _owner: string | null,
-      _operator: string | null,
-      _approved: null
+      owner: string | null,
+      operator: string | null,
+      approved: null
     ): EventFilter
 
     Transfer(
-      _from: string | null,
-      _to: string | null,
-      _tokenId: BigNumberish | null
+      from: string | null,
+      to: string | null,
+      tokenId: BigNumberish | null
     ): EventFilter
   }
 
   estimateGas: {
     approve(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>
 
     'approve(address,uint256)'(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>
 
-    balanceOf(_owner: string, overrides?: CallOverrides): Promise<BigNumber>
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
 
     'balanceOf(address)'(
-      _owner: string,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     getApproved(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     'getApproved(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     isApprovedForAll(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     'isApprovedForAll(address,address)'(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     ownerOf(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     'ownerOf(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
     'safeTransferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>
 
     'safeTransferFrom(address,address,uint256,bytes)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<BigNumber>
 
     setApprovalForAll(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>
 
     'setApprovalForAll(address,bool)'(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<BigNumber>
 
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'supportsInterface(bytes4)'(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
     transferFrom(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>
 
     'transferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<BigNumber>
   }
 
   populateTransaction: {
     approve(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     'approve(address,uint256)'(
-      _approved: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     balanceOf(
-      _owner: string,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'balanceOf(address)'(
-      _owner: string,
+      owner: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     getApproved(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'getApproved(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     isApprovedForAll(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'isApprovedForAll(address,address)'(
-      _owner: string,
-      _operator: string,
+      owner: string,
+      operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     ownerOf(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'ownerOf(uint256)'(
-      _tokenId: BigNumberish,
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 
     'safeTransferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     'safeTransferFrom(address,address,uint256,bytes)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
       data: BytesLike,
-      overrides?: PayableOverrides
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     setApprovalForAll(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     'setApprovalForAll(address,bool)'(
-      _operator: string,
+      operator: string,
       _approved: boolean,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'supportsInterface(bytes4)'(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
     transferFrom(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
 
     'transferFrom(address,address,uint256)'(
-      _from: string,
-      _to: string,
-      _tokenId: BigNumberish,
-      overrides?: PayableOverrides
+      from: string,
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides
     ): Promise<PopulatedTransaction>
   }
 }
