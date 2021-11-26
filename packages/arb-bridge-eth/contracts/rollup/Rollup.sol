@@ -307,7 +307,7 @@ abstract contract AbsRollup is Cloneable, RollupCore, Pausable, IRollup {
         require(isStaked(msg.sender), "NOT_STAKED");
 
         require(getNodeHash(nodeNum) == nodeHash, "NODE_REORG");
-        require(nodeNum >= firstUnresolvedNode() && nodeNum <= latestNodeCreated());
+        require(nodeNum >= firstUnresolvedNode() && nodeNum <= latestNodeCreated(), "NODE_NUM OUT OF RANGE");
         INode node = getNode(nodeNum);
         require(latestStakedNode(msg.sender) == node.prev(), "NOT_STAKED_PREV");
         stakeOnNode(msg.sender, nodeNum, confirmPeriodBlocks);

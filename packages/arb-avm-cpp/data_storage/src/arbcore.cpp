@@ -1761,6 +1761,8 @@ ValueResult<std::vector<MachineMessage>> ArbCore::readNextMessages(
         auto message = extractInboxMessage(raw_message.message);
         message.inbox_sequence_number = raw_message.sequence_number;
         messages.emplace_back(message, raw_message.accumulator);
+        std::cerr << "[ArbCore::readNextMessages]: "
+                  << message.inbox_sequence_number << std::endl;
     }
 
     return {rocksdb::Status::OK(), messages};
@@ -1896,6 +1898,8 @@ rocksdb::Status ArbCore::addMessages(const ArbCore::message_data_struct& data,
         auto seq_message =
             deserializeSequencerBatchItem(last_seq_num, it, bytes.end());
         seq_batch_items.emplace_back(seq_message, value_slice);
+        std::cerr << "[addMessages - seq_batch_items]: " << last_seq_num
+                  << std::endl;
     }
 
     std::vector<std::pair<DelayedMessage, rocksdb::Slice>> delayed_messages;
@@ -1907,6 +1911,8 @@ rocksdb::Status ArbCore::addMessages(const ArbCore::message_data_struct& data,
         auto delayed_message =
             deserializeDelayedMessage(seq_num, it, bytes.end());
         delayed_messages.emplace_back(delayed_message, value_slice);
+        std::cerr << "[addMessages - delayed_message]: " << seq_num
+                  << std::endl;
     }
 
     std::optional<uint256_t> reorging_to_count;

@@ -223,6 +223,7 @@ func (db *TxDB) HandleLog(logIndex uint64, avmLog value.Value) error {
 	case *evm.BlockInfo:
 		return db.handleBlockReceipt(res)
 	case *evm.MerkleRootResult:
+		logger.Warn().Msgf("HandleLog: (%d, %d)", res.BatchNumber, logIndex)
 		return db.as.SaveMessageBatch(res.BatchNumber, logIndex)
 	case *evm.TxResult:
 		monitor.GlobalMonitor.GotLog(res.IncomingRequest.MessageID)

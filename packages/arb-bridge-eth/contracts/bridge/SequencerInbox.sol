@@ -325,6 +325,7 @@ contract SequencerInbox is ISequencerInbox, Cloneable {
         (uint256 offset, uint256 seqBatchNum) = Marshaling.deserializeInt(proof, 0);
         uint256 lastBatchCount = 0;
         if (seqBatchNum > 0) {
+            require(seqBatchNum < inboxAccs.length, "seqBatchNum > 0 but out of range");
             (offset, lastBatchCount) = proveSeqBatchMsgCount(
                 proof,
                 offset,
@@ -332,6 +333,7 @@ contract SequencerInbox is ISequencerInbox, Cloneable {
             );
             lastBatchCount++;
         }
+        require(seqBatchNum < inboxAccs.length, "seqBatchNum out of range");
 
         bytes32 seqBatchAcc = inboxAccs[seqBatchNum];
         uint256 thisBatchCount;

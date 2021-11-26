@@ -43,6 +43,9 @@ int aggregatorSaveMessageBatch(CAggregatorStore* agg_ptr,
         auto agg = static_cast<AggregatorStore*>(agg_ptr);
         auto batch_num = receiveUint256(batch_num_ptr);
 
+        std::cerr << "[aggregatorSaveMessageBatch]: " << batch_num << ", "
+                  << log_index << std::endl;
+
         agg->saveMessageBatch(batch_num, log_index);
 
         return true;
@@ -58,6 +61,8 @@ Uint64Result aggregatorGetMessageBatch(CAggregatorStore* agg_ptr,
         auto agg = static_cast<AggregatorStore*>(agg_ptr);
         auto batch_num = receiveUint256(batch_num_ptr);
         auto index = agg->getMessageBatch(batch_num);
+        std::cerr << "[aggregatorGetMessageBatch]: " << batch_num << ", "
+                  << *index << std::endl;
         if (index) {
             return {*index, true};
         } else {

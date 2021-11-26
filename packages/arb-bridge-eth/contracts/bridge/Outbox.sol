@@ -173,6 +173,7 @@ contract Outbox is CloneFactory, IOutbox, Cloneable {
 
         // Hash the leaf an extra time to prove it's a leaf
         bytes32 calcRoot = calculateMerkleRoot(proof, path, item);
+        require(outboxIndex < outboxes.length, "OUT_OF_RANGE");
         OutboxEntry outbox = outboxes[outboxIndex];
         require(address(outbox) != address(0), "NO_OUTBOX");
 

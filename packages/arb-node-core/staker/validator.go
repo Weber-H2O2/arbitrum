@@ -133,6 +133,8 @@ func (v *Validator) resolveNextNode(ctx context.Context, info *ethbridge.StakerI
 			return errors.Wrap(err, "catching up to chain")
 		}
 		logger.Info().Int("node", int(unresolvedNodeIndex.Int64())).Msg("Confirming node")
+		logger.Warn().Msgf("Node information: %+v", nodeInfo)
+		logger.Warn().Msgf("Sends: %+v", sends)
 		return v.rollup.ConfirmNextNode(ctx, nodeInfo.Assertion, sends)
 	default:
 		return nil
